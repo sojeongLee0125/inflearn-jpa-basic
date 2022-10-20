@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -23,6 +24,16 @@ public class JpaMain {
 
             Member findMember = em.find(Member.class, 1l);
             findMember.setName("updateName");
+
+            // jpa 는 테이블이 아닌 객체를 대상으로 쿼리를 날린다.
+            List<Member> result = em.createQuery("select m from Member m", Member.class)
+                    .setFirstResult(1)
+                    .setMaxResults(10)
+                    .getResultList();
+
+            for (Member member : result) {
+                System.out.println("member = " + member.getName());
+            }
 
 
             tx.commit();
